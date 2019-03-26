@@ -208,7 +208,7 @@ public class JHTAlertController: UIViewController, UIViewControllerTransitioning
    /// The color of the border outline for the text field. The default color is gray.
    var textFieldBorderColor = UIColor.gray
    /// The type of border around the text field. Default is none
-   var textFieldBorderStyle = UITextBorderStyle.none
+   var textFieldBorderStyle = UITextField.BorderStyle.none
    private var textFieldContainerView = UIStackView()
    /// An override for the textfield to have rounded corners
    public var textFieldHasRoundedCorners = true
@@ -258,9 +258,9 @@ public class JHTAlertController: UIViewController, UIViewControllerTransitioning
          iconImageView = UIImageView(image: iconImage)
          view.addSubview(iconImageView!)
          iconImageView!.translatesAutoresizingMaskIntoConstraints = false
-
-         let imageCenterX = NSLayoutConstraint(item: iconImageView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
-         let imageCenterY = NSLayoutConstraint(item: iconImageView, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1.0, constant: 5)
+        guard let strongIconImageView = iconImageView else { return }
+         let imageCenterX = NSLayoutConstraint(item: strongIconImageView, attribute: .centerX, relatedBy: .equal, toItem: view, attribute: .centerX, multiplier: 1.0, constant: 0)
+         let imageCenterY = NSLayoutConstraint(item: strongIconImageView, attribute: .bottom, relatedBy: .equal, toItem: containerView, attribute: .top, multiplier: 1.0, constant: 5)
          view.addConstraints([imageCenterX,
                               imageCenterY])
       }
@@ -446,7 +446,7 @@ public class JHTAlertController: UIViewController, UIViewControllerTransitioning
                               heightConstraint,
                               widthConstraint])
          
-         let circlePath = UIBezierPath(arcCenter: CGPoint(x: shapeView.frame.maxX,y: shapeView.frame.maxY), radius: CGFloat(iconBackgroundRadius), startAngle: CGFloat(0), endAngle:CGFloat(M_PI * 2), clockwise: true)
+         let circlePath = UIBezierPath(arcCenter: CGPoint(x: shapeView.frame.maxX,y: shapeView.frame.maxY), radius: CGFloat(iconBackgroundRadius), startAngle: CGFloat(0), endAngle:CGFloat(Double.pi * 2), clockwise: true)
          
          shapeLayer = CAShapeLayer()
          shapeLayer.path = circlePath.cgPath
@@ -505,7 +505,7 @@ public class JHTAlertController: UIViewController, UIViewControllerTransitioning
    /// The handler method for the action. This is where the code is executed.
    ///
    /// - Parameter sender: the UIButton that was pressed
-   public func buttonTapped(sender: UIButton) {
+    @objc public func buttonTapped(sender: UIButton) {
       self.dismiss(animated: true, completion: nil)
       sender.isSelected = true
       let action = buttonActions[sender.tag - 1]
@@ -554,7 +554,7 @@ public class JHTAlertController: UIViewController, UIViewControllerTransitioning
    ///
    /// - Parameter configurationHandler: the copletion of the textfield
    public func addTextFieldWithConfigurationHandler(configurationHandler: ((JHTTextField) -> Void)!) {
-      var textField = JHTTextField()
+      let textField = JHTTextField()
       textField.frame.size = CGSize(width: containerViewWidth, height: textFieldHeight)
       textField.borderStyle = textFieldBorderStyle
       textField.delegate = self
